@@ -1,27 +1,31 @@
-import React, {useState} from 'react'
-import { Button,Form,Label,Input,FormGroup,Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import React, {useState, useEffect} from 'react'
+import { Button,Form,Input,FormGroup,Row,Col} from 'reactstrap';
 import axios from 'axios'
-const EditUser = (props, {onViewUser})=>{
-    const {
-        userdetails,
-        modal,
-        className
-      } = props;
-    
-    const [modal_state, setModalState] = useState(true);
-    const {name,id} = {...userdetails}
-    const [newname,setName]= useState('')
- 
+import { useParams} from "react-router";
 
-    const toggle = () => setModalState(!modal);
+
+const EditUser = (props)=>{
+  let { id } = useParams();
+    
+    const [newname,setName]= useState('')
+    const [userdetails, setUsersDetails] = useState([])
+ 
     const data = {
-      id:id,
+      id:userdetails.id,
       name:newname
     }
+ 
+   useEffect(()=>{
+    axios.get('http://127.0.0.1:5000/userdetails/'+id)
+    .then(response =>{
+        setUsersDetails(...response.data)    
+    })
+    .catch(error =>{
+        console.log(error)
+    })
+   })
 
-    console.log(data)
-    
-    const handleEdit= (e)=>{
+  const handleEdit= (e)=>{
       e.preventDefault()
       axios({
         headers: {
@@ -39,26 +43,21 @@ const EditUser = (props, {onViewUser})=>{
     }
     
     return (
-            <div>
-                <Modal isOpen={modal} toggle={onViewUser} className={className}>
-                <ModalHeader toggle={onViewUser}></ModalHeader>
-                <ModalBody>
+            
+              <Row>
+                <Col xs="4"></Col>
+                <Col xs="4">
                   <Form onSubmit = {handleEdit}>
+                     <h3>Update </h3>
                     <FormGroup>
-    
-                      <Input type="text" value={newname}  onChange={e=> setName(e.target.value)} placeholder={name} />
+                      <Input type="text" value={newname}  onChange={e=> setName(e.target.value)} placeholder={userdetails.name} />
                     </FormGroup>
-                    <Button type='submit' outline color="success" size="sm" >Edit User</Button>
+                    <Button type='submit' outline color="success" size="sm" >Update {userdetails.name}</Button>
                   </Form>
-  
-                   
-                </ModalBody>
-                <ModalFooter>
-                    <Button color="primary" onClick={toggle}>OK</Button>{' '}
-        
-                </ModalFooter>
-             </Modal>
-            </div>
+                </Col>
+                <Col xs="4"></Col>
+              </Row>
+                 
         )
 }
 export default EditUser

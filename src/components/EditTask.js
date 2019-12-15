@@ -1,21 +1,16 @@
-import React, {useState} from 'react'
-import { Button,Form,Label,Input,FormGroup,Modal, ModalHeader, ModalBody, ModalFooter ,Col} from 'reactstrap';
+import React, {useState,useEffect} from 'react'
+import { Button,Form,Input,FormGroup,Row,Col} from 'reactstrap';
 import axios from 'axios'
+import { useParams} from "react-router";
+
 const EditTask = (props)=>{
-    const {
-      taskDetails,
-        modal,
-        className,
-        onEditTask
-      } = props;
-    
-    const [modal_state, setModalState] = useState(true);
-    const {description,Id, state} = {...taskDetails}
-    const [newname,setDescription]= useState('')
-    
-    const toggle = () => setModalState(false);
+  let { id } = useParams();
+  
+    const [newname,setDescription]= useState('') 
+    const [taskDetails, setTaskDetails] = useState([])
+
     const data = {
-      id:Id,
+      id:id,
       name:newname
     }
 
@@ -35,48 +30,49 @@ const EditTask = (props)=>{
       })
 
     }
+
+    useEffect(()=>{
+      axios.get('http://127.0.0.1:5000/tasks_view/'+id)
+      .then(response =>{
+        console.log(response.data)
+          setTaskDetails(...response.data)    
+         
+      },[])
+      .catch(error =>{
+          console.log(error)
+      })
+     })
+  
     
     return (
-            <div>
-                <Modal isOpen={modal} toggle={toggle} className={className}>
-                <ModalHeader toggle={toggle}></ModalHeader>
-                <ModalBody>
+      <Row>
+      <Col xs="4"></Col>
+      <Col xs="4">
+             
                   <Form onSubmit = {handleEdit}>
+                    <h4>Edit Task</h4>
                     <FormGroup>
-                      <Input type="text" value={newname}  onChange={e=> setDescription(e.target)} placeholder={description} />
+                      <Input type="text" value={newname}  onChange={e=> setDescription(e.target.value)} placeholder={taskDetails.description} />
                     </FormGroup>
-                    
-                    <FormGroup tag="fieldset" row>
-                      
-                      <Col sm={10}>
-                      {state}
-                        <FormGroup check>
-                          <Label check>
-                            <Input type="radio" name="radio2" />{' '}
-                            to do
-                          </Label>
-                        </FormGroup>
-                        <FormGroup check>
-                          <Label check>
-                            <Input type="radio" name="radio2" />{' '}
-                            Done
-                          </Label>
-                        </FormGroup>
+                  
+                     <FormGroup>
+                      <Input type="select" name="select" value={taskDetails.state}>
+                        <option>{taskDetails.state}</option>
+                        <option>done</option>
+                      </Input>
+                    </FormGroup>
          
-        </Col>
-      </FormGroup>
-
+              
                     <Button type='submit' outline color="success" size="sm" >Edit Task</Button>
                   </Form>
   
-                   
-                </ModalBody>
-                <ModalFooter>
-                    <Button color="primary" onClick={toggle}>OK</Button>{' '}
-        
-                </ModalFooter>
-             </Modal>
-            </div>
+                
+                  </Col>
+                <Col xs="4"></Col>
+              </Row>
+
+              
         )
 }
+
 export default EditTask

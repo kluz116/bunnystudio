@@ -1,22 +1,26 @@
-import React, {useState} from 'react'
-import { Button,Table,Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import React, {useState,useEffect} from 'react'
+import { Table } from 'reactstrap';
+import { useParams} from "react-router";
+import axios from 'axios'
 
-const UserList = (props, {onViewUser})=>{
-    const {
-      userTask,
-        modal,
-        className
-      } = props;
-    
-    const [modal_state, setModalState] = useState(true);
+const UserList = (props)=>{
+  const [userTask, setUserTask] = useState([])
+  let { id } = useParams();
 
-    const toggle = () => setModalState(!modal);
-    
+  useEffect(()=>{
+    axios.get('http://127.0.0.1:5000/usertask/'+id)
+    .then(response =>{
+        setUserTask(response.data)    
+    })
+    .catch(error =>{
+        console.log(error)
+    })
+   })
+
+
     return (
             <div>
-                <Modal isOpen={modal} toggle={onViewUser} className={className}>
-                <ModalHeader toggle={onViewUser}></ModalHeader>
-                <ModalBody>
+       
                 <Table striped>
       <thead>
         <tr>
@@ -42,12 +46,7 @@ const UserList = (props, {onViewUser})=>{
     </Table>
   
                    
-                </ModalBody>
-                <ModalFooter>
-                    <Button color="primary" onClick={toggle}>OK</Button>{' '}
-        
-                </ModalFooter>
-             </Modal>
+     
             </div>
         )
 }

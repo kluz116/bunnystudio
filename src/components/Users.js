@@ -1,16 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import { Table, Button , Container} from 'reactstrap';
-import NavBar from './Nav'
+import { Link } from 'react-router-dom'; 
 import axios from 'axios'
-import UserList from './UserList'
-import EditUser from './EditUser'
 import AddUser from './addUser'
 
 const Users = () => {
   const [user, setUsers] = useState([])
-  const [userdetails, setUsersDetails] = useState([])
-  const [userTask, setUserTask] = useState([])
-  const [modal, setModal] = useState(false);
+
+  
 
   useEffect(()=>{
     axios.get('http://127.0.0.1:5000/users ')
@@ -30,34 +27,8 @@ const Users = () => {
     })
   }
 
-    const onViewUser = id =>{
-      axios.get('http://127.0.0.1:5000/usertask/'+id)
-      .then(response =>{
-      
-          setModal(true);
-          setUserTask(response.data)    
-      })
-      .catch(error =>{
-          console.log(error)
-      })
-    }
-
-    const onEditUser = id =>{
-      axios.get('http://127.0.0.1:5000/userdetails/'+id)
-      .then(response =>{
-          setModal(true);
-          setUsersDetails(...response.data)    
-      })
-      .catch(error =>{
-          console.log(error)
-      })
-    }
-
-
-  
   return (
     <div>
-      <NavBar/>
     
       <Container>
       <AddUser/>
@@ -79,15 +50,13 @@ const Users = () => {
            <tr>
             <td>{item.id}</td>
            <td>{item.name}</td>
-           <td><Button outline color="success" size="sm" onClick={()=>onViewUser(item.id)} >View Tasks</Button>{' '} <Button outline color="danger" size="sm" onClick={()=>onDelete(item.id)} >Delete</Button>{' '} <Button outline color="primary" size="sm" onClick={()=>onEditUser(item.id)}>Edit</Button>{' '}</td>
+           <td><Link to={"/UserList/"+item.id} className="btn btn-info   outline  btn-sm " >Tasks</Link> <Button outline color="danger" size="sm" onClick={()=>onDelete(item.id)} >Delete</Button>{' '}     <Link to={"/EditUser/"+item.id} className="btn btn-success   outline  btn-sm " >Edit</Link>  </td>
            </tr>
         ))}
         
       </tbody>
     </Table>
   
-    <UserList modal = {modal} userTask = {userTask}/>  
-    <EditUser modal = {modal} userdetails = {userdetails}/>  
     </Container>
     </div>
    

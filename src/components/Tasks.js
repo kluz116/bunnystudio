@@ -2,13 +2,13 @@ import React, {useState, useEffect} from 'react';
 import { Table, Container, Button } from 'reactstrap';
 import axios from 'axios'
 import AddTasks  from './AddTasks'
-import EditTask from './EditTask';
+import { Link } from 'react-router-dom'; 
+
 
 const Tasks = () => {
   const [task, setTask] = useState([])
-  const [taskDetails, setTaskDetails] = useState([])
   const [res,setRes] = useState('')
-  const [modal, setModal] = useState(false);
+  
   useEffect(()=>{
     axios.get('http://127.0.0.1:5000/tasks')
     .then(response => {
@@ -17,18 +17,6 @@ const Tasks = () => {
     .catch(error => {console.log(error)})
   },[])
 
-  const onEditTask = id =>{
-    axios.get('http://127.0.0.1:5000/tasks_view/'+id)
-    .then(response =>{
-      setModal(true);
-      console.log(response.data)
-        setTaskDetails(...response.data)    
-       
-    })
-    .catch(error =>{
-        console.log(error)
-    })
-  }
   const onDelete = id =>{
     axios.get('http://127.0.0.1:5000/delete_task/'+id)
     .then(response =>{
@@ -59,12 +47,12 @@ const Tasks = () => {
           <td>{item.Id}</td>
          <td>{item.name}</td>
          <td>{item.description}</td>
-         <td><Button outline color="success" size="sm" onClick={()=>onEditTask(item.Id)}>Edit Task</Button>{' '} <Button outline color="danger" size="sm" onClick={()=>onDelete(item.id)} >Delete</Button>{' '}</td>
+         <td><Link to={"/EditTask/"+item.Id} className="btn btn-info   outline  btn-sm " >Edit Tasks</Link> <Button outline color="danger" size="sm" onClick={()=>onDelete(item.id)} >Delete</Button>{' '}</td>
          </tr>
       ))}    
     </tbody>
   </Table>
-  <EditTask modal = {modal} taskDetails = {taskDetails} onEditTask ={onEditTask}/>  
+  
   </Container>
   );
 }
