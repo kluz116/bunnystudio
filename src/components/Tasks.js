@@ -44,10 +44,10 @@ const Tasks = () => {
     <tbody>
       {task.map((item,index)=>(
          <tr>
-          <td>{item.Id}</td>
+         <td key={index}>{item.Id}</td>
          <td>{item.name}</td>
          <td>{item.description}</td>
-         <td><Link to={"/EditTask/"+item.Id} className="btn btn-info   outline  btn-sm " >Edit Tasks</Link> <Button outline color="danger" size="sm" onClick={()=>onDelete(item.id)} >Delete</Button>{' '}</td>
+         <td><Link to={"/EditTask/"+item.Id} className="btn btn-info   outline  btn-sm " >Edit Tasks</Link> <Button outline color="danger" size="sm" onClick={()=>onDelete(item.Id)} >Delete</Button>{' '}</td>
          </tr>
       ))}    
     </tbody>

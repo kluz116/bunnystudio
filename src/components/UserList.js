@@ -17,37 +17,33 @@ const UserList = (props)=>{
     })
    })
 
-
     return (
             <div>
        
                 <Table striped>
-      <thead>
-        <tr>
-          <th>TaskID</th>
-          <th>Name</th>
-          <th>Todo</th>
-          
-     
-        </tr>
-      </thead>
-      <tbody>
-       
-        {userTask.map((item,index)=>(
-           <tr>
-            <td>{item.Id}</td>
-           <td>{item.name}</td>
-           <td>{item.description}</td>
-      
-           </tr>
-        ))}
-        
-      </tbody>
-    </Table>
-  
-                   
-     
-            </div>
+                  <thead>
+                    <tr>
+                      <th>TaskID</th>
+                      <th>Name</th>
+                      <th>Todo</th>
+                      
+                
+                    </tr>
+                  </thead>
+                  <tbody>
+                  
+                    {userTask.map((item,index)=>(
+                      <tr>
+                        <td>{item.Id}</td>
+                      <td>{item.name}</td>
+                      <td>{item.description}</td>
+                  
+                      </tr>
+                    ))}
+                    
+                  </tbody>
+                </Table>
+              </div>
         )
 }
 export default UserList

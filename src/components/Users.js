@@ -48,7 +48,7 @@ const Users = () => {
        
         {user.map((item,index)=>(
            <tr>
-            <td>{item.id}</td>
+            <td key={index}>{item.id}</td>
            <td>{item.name}</td>
            <td><Link to={"/UserList/"+item.id} className="btn btn-info   outline  btn-sm " >Tasks</Link> <Button outline color="danger" size="sm" onClick={()=>onDelete(item.id)} >Delete</Button>{' '}     <Link to={"/EditUser/"+item.id} className="btn btn-success   outline  btn-sm " >Edit</Link>  </td>
            </tr>
